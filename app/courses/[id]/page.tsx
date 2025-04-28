@@ -64,7 +64,7 @@ interface CourseData {
   price: string;
 };
 
-export default async function CourseDetailPage({ params }: { params: { id: string } }) {
+export default async function CourseDetailPage() {
   // Fetch course data server-side
   let courseData: CourseData;
   
@@ -75,14 +75,14 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
     }
     
     const result = await response.json();
-    const courseResult = result.result?.find((course: any) => course.id === params.id) || result.result?.[0];
+    const courseResult = result.result?.find((course: any) => course.id === 1) || result.result?.[0];
     
     if (!courseResult) {
       throw new Error("Course not found");
     }
     
     courseData = {
-      id: courseResult.id || params.id,
+      id: courseResult.id || 1,
       title: courseResult.course_name || "Course Name Unavailable",
       instructor: courseResult.course_instructor || "Unknown Instructor",
       description: courseResult.course_description || "No description available",
@@ -101,7 +101,7 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
     console.error("Error fetching course data:", error);
     // Fallback data if fetch fails
     courseData = {
-      id: params.id,
+      id: "1",
       title: "Course information unavailable",
       instructor: "Unknown",
       description: "Course information could not be loaded",

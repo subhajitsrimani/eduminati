@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import {
@@ -10,7 +11,6 @@ import {
 import { Bell, Mail, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 const courses = [
@@ -19,7 +19,7 @@ const courses = [
     title: " Subhajit Srimani",
     category: "PROGRAMMING",
     thumbnail:
-      "https://as1.ftcdn.net/v2/jpg/02/25/43/84/1000_F_225438459_rf2TFCzW8MohNc2jD98Fu9UZg9fAbkBJ.jpghttps://stock.adobe.com/images/charming-cheerful-smiling-financial-bank-sales-loan-representative-for-money-management-at-desk-with-suit/180798610https://as1.ftcdn.net/jpg/01/80/79/86/1000_F_180798610_qRrXHRb1DU0jltcwvWMIRELzIhIAR498.jpg",
+      "https://as1.ftcdn.net/v2/jpg/02/25/43/84/1000_F_225438459_rf2TFCzW8MohNc2jD98Fu9UZg9fAbkBJ.jpg",
   },
   {
     id: 2,
@@ -79,11 +79,11 @@ const mentors = [
   },
 ];
 
-export default function CoursesPage() {
-  const { user } = useUser();
+function InstructorsContent() {
   const searchParams = useSearchParams();
   const searchCategory = searchParams.get("search") || "";
   const [index, setIndex] = useState(0);
+
   // Split comma-separated categories
   const categories = searchCategory
     .split(",")
@@ -98,6 +98,43 @@ export default function CoursesPage() {
         )
       )
     : courses;
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6 dark:text-white">Instructors</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {filteredCourses.map((course) => (
+          <div
+            key={course.id}
+            className="transition-transform hover:scale-[1.02]"
+          >
+            <Card className="overflow-hidden dark:bg-gray-700">
+              <div className="aspect-video relative">
+                <Image
+                  src={course.thumbnail}
+                  alt={course.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <CardHeader className="space-y-2">
+                <div className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20">
+                  {course.category}
+                </div>
+                <CardTitle className="line-clamp-2 text-lg dark:text-white">
+                  {course.title}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function InstructorsPage() {
+  const { user } = useUser();
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-800 pl-10">
@@ -118,36 +155,9 @@ export default function CoursesPage() {
             </div>
 
             {/* Continue Watching */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6 dark:text-white">Instructors</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {filteredCourses.map((course) => (
-                  <div
-                    key={course.id}
-                    className="transition-transform hover:scale-[1.02]"
-                  >
-                    <Card className="overflow-hidden dark:bg-gray-700">
-                      <div className="aspect-video relative">
-                        <Image
-                          src={course.thumbnail}
-                          alt={course.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <CardHeader className="space-y-2">
-                        <div className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20">
-                          {course.category}
-                        </div>
-                        <CardTitle className="line-clamp-2 text-lg dark:text-white">
-                          {course.title}
-                        </CardTitle>
-                      </CardHeader>
-                    </Card>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Suspense fallback={<div>Loading instructors...</div>}>
+              <InstructorsContent />
+            </Suspense>
           </div>
         </div>
 
@@ -186,6 +196,8 @@ export default function CoursesPage() {
                   <MessageSquare className="h-5 w-5 dark:text-white" />
                 </Button>
               </div>
+            </div>
+
             {/* Your Mentor */}
             <div>
               <div className="flex items-center justify-between mb-6">
@@ -227,6 +239,5 @@ export default function CoursesPage() {
         </div>
       </div>
     </div>
-  </div>
   );
 }
