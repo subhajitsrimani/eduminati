@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   return [
@@ -65,36 +64,25 @@ interface CourseData {
   price: string;
 };
 
-interface PageProps {
-  params: { id: string };
-}
-
-export default async function CourseDetailPage({ params }: PageProps) {
+export default async function CourseDetailPage() {
   // Fetch course data server-side
   let courseData: CourseData;
-  const courseId = params.id;
-
+  
   try {
-    // Use relative path for internal API route
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ? process.env.NEXT_PUBLIC_BASE_URL : ""}/api/courseData`, {
-      // Force server-side fetch
-      cache: "no-store",
-      next: { revalidate: 0 },
-    });
+    const response = await fetch("http://localhost:3000/api/courseData", { cache: 'no-store' });
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.status}`);
     }
-
+    
     const result = await response.json();
-    const courseResult = result.result?.find((course: any) => String(course.id) === String(courseId)) || result.result?.[0];
-
+    const courseResult = result.result?.find((course: any) => course.id === 1) || result.result?.[0];
+    
     if (!courseResult) {
-      // Optionally show 404 page
-      notFound();
+      throw new Error("Course not found");
     }
-
+    
     courseData = {
-      id: courseResult.id || courseId,
+      id: courseResult.id || 1,
       title: courseResult.course_name || "Course Name Unavailable",
       instructor: courseResult.course_instructor || "Unknown Instructor",
       description: courseResult.course_description || "No description available",
@@ -113,7 +101,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
     console.error("Error fetching course data:", error);
     // Fallback data if fetch fails
     courseData = {
-      id: courseId,
+      id: "1",
       title: "Course information unavailable",
       instructor: "Unknown",
       description: "Course information could not be loaded",

@@ -207,7 +207,7 @@ export default function AssessmentContent({
                 }
                 // Consider using a modal instead of alert for better UX
                 alert(`Correct Answers: ${finalCorrectAnswers}\n${suggestion}`);
-                window.location.href = "http://eduminati-omega.vercel.app/courses/1/prilim/learn";
+                window.location.href = "http://localhost:3000/courses/1/prilim/learn";
             }}
             disabled={selectedOption === null}
             // Adjusted button colors for dark mode

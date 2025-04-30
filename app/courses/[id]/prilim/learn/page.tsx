@@ -4,7 +4,7 @@ import { CourseContent } from "./components/CourseContent";
 async function getCourseData() {
   let result: any = {};
   try {
-    const response = await fetch(`http://eduminati-omega.vercel.app/api/courseData`);
+    const response = await fetch(`http://localhost:3000/api/courseData`);
     if (!response.ok) {
       throw new Error(`Failed to fetch course data: ${response.status}`);
     }

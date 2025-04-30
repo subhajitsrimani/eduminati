@@ -13,7 +13,7 @@ export default function StartTestPage() {
           C++ programming so as to suggest you the perfect entry point to this course.
         </p>
       </div>
-      <Link href="http://eduminati-omega.vercel.app/courses/1/prilim/learn/assessment">
+      <Link href="http://localhost:3000/courses/1/prilim/learn/assessment">
         <Button className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-indigo-700 hover:shadow-md text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
           START TEST
         </Button>
