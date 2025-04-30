@@ -69,7 +69,7 @@ export default async function CourseDetailPage() {
   let courseData: CourseData;
   
   try {
-    const response = await fetch("http://localhost:3000/api/courseData", { cache: 'no-store' });
+    const response = await fetch("http://eduminati-omega.vercel.app/api/courseData");
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.status}`);
     }
