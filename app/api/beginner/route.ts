@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
 
 export const runtime = "nodejs"; 
-
-const encodedDbName = encodeURIComponent("Course1_c++");
-const connectionSrt = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.j9gms.mongodb.net/${encodedDbName}?retryWrites=true&w=majority&appName=Cluster0`;
 
 const projectSchema = new mongoose.Schema({
   question: { type: String, required: true },
@@ -14,26 +12,9 @@ const projectSchema = new mongoose.Schema({
 
 const Project = mongoose.models.Beginner || mongoose.model("Beginner", projectSchema, "Beginner");
 
-mongoose.set("debug", true);
-
-async function connectDB() {
-  if (mongoose.connection.readyState === 1) {
-    console.log("✅ Already connected to MongoDB.");
-    return;
-  }
-  try {
-    console.log("🚀 Connecting to MongoDB...");
-    await mongoose.connect(connectionSrt);
-    console.log("✅ Successfully connected to MongoDB.");
-  } catch (error) {
-    console.error("❌ MongoDB connection error:", error);
-    throw new Error(`Database connection failed: ${error instanceof Error ? error.message : String(error)}`);
-  }
-}
-
 export async function GET() {
   try {
-    await connectDB();
+    await connectDB("Course1_c++");
 
     const data = await Project.find();
     
